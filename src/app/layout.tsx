@@ -27,6 +27,7 @@ export default function RootLayout({
 
   useEffect(() => {
     if (pathname.length > 1) setHomepageNavItem(null);
+    else setHomepageNavItem('links');
   }, [pathname]);
 
   return (
