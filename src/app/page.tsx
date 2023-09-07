@@ -1,9 +1,9 @@
-import Image from 'next/image';
+import React from 'react';
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex bg-white h-10"></div>
-    </main>
-  );
-}
+type Props = {};
+
+const Home = (props: Props) => {
+  return null;
+};
+
+export default Home;
