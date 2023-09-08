@@ -19,7 +19,7 @@ const HomeNavbar = ({ navItem, setNavItem }: Props) => {
   };
 
   return (
-    <div className="h-fit bg-white rounded-md shadow-sm">
+    <div className="h-fit bg-white rounded-md shadow-md border">
       <div className="p-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="p-2 grid place-items-center rounded-md bg-tertiary">

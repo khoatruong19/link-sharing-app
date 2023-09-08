@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import ConvexClientProvider from './[providers]/ConvexClientProvider';
 import HomeNavbar from './[components]/HomeNavbar';
-import LinksScreen from './[components]/LinksScreen';
+import SocialLinksScreen from './[components]/SocialLinksScreen';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -41,9 +41,9 @@ export default function RootLayout({
                 navItem={homepageNavItem}
                 setNavItem={setHomepageNavItem}
               />
-              <div className="h-full w-full flex gap-5">
-                <LinksScreen />
-                <div className="flex-1 bg-red-400">
+              <div className="h-full w-full flex gap-5 overflow-hidden">
+                <SocialLinksScreen />
+                <div className="flex-1 px-10 pb-5 pt-10 2xl:px-16 bg-white border rounded-md shadow-md">
                   {homepageNavItem === 'links' ? links : profile}
                 </div>
               </div>

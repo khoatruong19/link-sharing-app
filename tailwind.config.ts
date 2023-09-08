@@ -18,8 +18,11 @@ const config: Config = {
         secondary: '#E3F2C1',
         tertiary: '#AAC8A7',
       },
+      screens: {
+        '3xl': '1700px',
+      },
     },
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar')({ nocompatible: true })],
 };
 export default config;

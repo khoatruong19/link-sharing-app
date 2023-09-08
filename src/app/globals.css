@@ -20,3 +20,7 @@ body {
   color: rgb(var(--foreground-rgb));
   background: #f6ffde;
 }
+
+.custom-scrollbar {
+  @apply scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-secondary scrollbar-thumb-rounded-md scrollbar-track-rounded-md;
+}

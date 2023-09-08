@@ -5,3 +5,20 @@ export type NavItem = {
   value: string;
   icon: LucideIcon;
 };
+
+export type Platform =
+  | 'GitHub'
+  | 'Facebook'
+  | 'Youtube'
+  | 'Twitter'
+  | 'LinkedIn'
+  | 'Instagram'
+  | 'Tiktok';
+
+export type PlatformItem = {
+  label: Platform;
+  iconUrl: string;
+  color: string;
+};
+
+export type SocialLink = PlatformItem & { url: string };
