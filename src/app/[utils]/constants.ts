@@ -1,6 +1,9 @@
 import { Link, User2 } from 'lucide-react';
 import { NavItem, PlatformItem } from './types';
 
+export const CLERK_DEV_PUBLISH_KEY =
+  'pk_test_bGVnaWJsZS1hbGJhY29yZS0xMC5jbGVyay5hY2NvdW50cy5kZXYk';
+
 export const NAV_ITEMS: NavItem[] = [
   {
     label: 'Links',

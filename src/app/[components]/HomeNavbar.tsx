@@ -1,10 +1,9 @@
 'use client';
 
-import React from 'react';
 import { Link2 } from 'lucide-react';
-import HomeNavLinks from './HomeNavLinks';
-import CustomButton from './CustomButton';
 import { useRouter } from 'next/navigation';
+import CustomButton from './CustomButton';
+import HomeNavLinks from './HomeNavLinks';
 
 type Props = {
   navItem: string | null;
@@ -27,7 +26,9 @@ const HomeNavbar = ({ navItem, setNavItem }: Props) => {
           </div>
           <span className="text-2xl text-black font-bold">devlinks</span>
         </div>
+
         <HomeNavLinks navItem={navItem} setNavItem={setNavItem} />
+
         <CustomButton
           clickHandler={navigateToPreviewPage}
           text="Preview"

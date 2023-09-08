@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import ConvexClientProvider from './[providers]/ConvexClientProvider';
 import HomeNavbar from './[components]/HomeNavbar';
 import SocialLinksScreen from './[components]/SocialLinksScreen';
+import AuthenticationProvider from './[providers]/AuthenticationProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -36,18 +37,20 @@ export default function RootLayout({
         <ConvexClientProvider>
           {children}
           {homepageNavItem && (
-            <div className="w-screen h-screen p-4 flex flex-col gap-4">
-              <HomeNavbar
-                navItem={homepageNavItem}
-                setNavItem={setHomepageNavItem}
-              />
-              <div className="h-full w-full flex gap-5 overflow-hidden">
-                <SocialLinksScreen />
-                <div className="flex-1 px-10 pb-5 pt-10 2xl:px-16 bg-white border rounded-md shadow-md">
-                  {homepageNavItem === 'links' ? links : profile}
+            <AuthenticationProvider>
+              <div className="w-screen h-screen p-4 flex flex-col gap-4">
+                <HomeNavbar
+                  navItem={homepageNavItem}
+                  setNavItem={setHomepageNavItem}
+                />
+                <div className="h-full w-full flex gap-5 overflow-hidden">
+                  <SocialLinksScreen />
+                  <div className="flex-1 px-10 pb-5 pt-10 2xl:px-16 bg-white border rounded-md shadow-md">
+                    {homepageNavItem === 'links' ? links : profile}
+                  </div>
                 </div>
               </div>
-            </div>
+            </AuthenticationProvider>
           )}
         </ConvexClientProvider>
       </body>
