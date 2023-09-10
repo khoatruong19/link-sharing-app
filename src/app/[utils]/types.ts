@@ -1,4 +1,5 @@
 import { LucideIcon } from 'lucide-react';
+import { Id } from '../../../convex/_generated/dataModel';
 
 export type NavItem = {
   label: string;
@@ -21,4 +22,4 @@ export type PlatformItem = {
   color: string;
 };
 
-export type SocialLink = PlatformItem & { url: string };
+export type SocialLink = PlatformItem & { _id?: Id<'link'>; url: string };

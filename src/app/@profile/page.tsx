@@ -1,9 +1,11 @@
+'use client';
+
 import React from 'react';
 
 type Props = {};
 
-const Links = (props: Props) => {
-  return <div className="h-10 w-10 text-black">Profile</div>;
+const Profile = (props: Props) => {
+  return <div className="text-black h-full">Profile</div>;
 };
 
-export default Links;
+export default Profile;

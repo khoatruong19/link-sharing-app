@@ -1,10 +1,22 @@
 import Image from 'next/image';
 import React from 'react';
 import SocialLinks from './SocialLinks';
+import { useQuery } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
+import { useUser } from '@clerk/nextjs';
 
 type Props = {};
 
 const SocialLinksScreen = (props: Props) => {
+  const { user } = useUser();
+  const profile = useQuery(api.profile.getProfileByUserId, {
+    userId: user!.id,
+  });
+
+  const links = useQuery(api.link.getLinksByUserId, {
+    userId: user!.id,
+  });
+
   return (
     <div className="w-[40%] h-full overflow-hidden bg-white border shadow-md rounded-md grid place-items-center p-8 xl:p-20 2xl:p-24">
       <div className="w-[90%] 3xl:w-[80%] h-full border-2 border-tertiary rounded-2xl overflow-hidden">
@@ -12,29 +24,21 @@ const SocialLinksScreen = (props: Props) => {
           <div className="flex flex-col items-center gap-2 text-black">
             <Image
               alt=""
-              src="https://avatars.githubusercontent.com/u/85026053?v=4"
+              src={profile?.imageUrl ?? ''}
               width={100}
               height={100}
               objectFit="cover"
               className="rounded-full mx-auto mb-2"
             />
-            <h2 className="text-xl font-semibold">Dark Knight</h2>
-            <p className="text-sm text-gray-500">khoa.truongthdk@gmail.com</p>
+            <h2 className="text-xl font-semibold">
+              {profile?.firstName} {profile?.lastName}
+            </h2>
+            <p className="text-sm text-gray-500">{profile?.email}</p>
           </div>
 
           <div className="mt-10">
-            <SocialLinks />
-            <SocialLinks />
-            <SocialLinks />
-            <SocialLinks />
-            <SocialLinks />
-            <SocialLinks />
-            <SocialLinks />
-            <SocialLinks />
-            <SocialLinks />
-            <SocialLinks />
-            <SocialLinks />
-            <SocialLinks />
+            {links &&
+              links.map((link) => <SocialLinks key={link._id} link={link} />)}
           </div>
         </div>
       </div>
