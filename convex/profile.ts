@@ -1,10 +1,4 @@
-import {
-  internalQuery,
-  internalAction,
-  query,
-  action,
-  internalMutation,
-} from './_generated/server';
+import { query, action, internalMutation, mutation } from './_generated/server';
 import { api, internal } from './_generated/api';
 import { v } from 'convex/values';
 
@@ -40,6 +34,28 @@ export const getProfileByUserId = query({
       .first();
 
     return profile;
+  },
+});
+
+export const updateProfile = mutation({
+  args: {
+    userId: v.string(),
+    profileId: v.id('profile'),
+    firstName: v.string(),
+    lastName: v.string(),
+    imageUrl: v.string(),
+    email: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const { profileId, userId, ...rest } = args;
+    const existingProfile = await ctx.db.get(profileId);
+
+    if (!existingProfile) throw new Error('Profile not found');
+
+    if (existingProfile.userId !== userId)
+      throw new Error('Not authenticated!');
+
+    await ctx.db.patch(profileId, rest);
   },
 });
 
