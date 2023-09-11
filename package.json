@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.23.5",
+    "@hookform/resolvers": "^3.3.1",
     "@types/node": "20.5.9",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
@@ -22,11 +23,13 @@
     "postcss": "8.4.29",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.46.1",
     "react-social-icons": "^6.3.0",
     "react-spinners": "^0.13.8",
     "social-links": "^1.13.8",
     "tailwindcss": "3.3.3",
-    "typescript": "5.2.2"
+    "typescript": "5.2.2",
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "tailwind-scrollbar": "^3.0.5"

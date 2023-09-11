@@ -25,7 +25,7 @@ const Links = (props: Props) => {
   };
 
   return (
-    <div className="text-black h-full">
+    <div className="text-black h-full  flex flex-col">
       <h1 className="text-4xl font-bold mb-2">Customize your links</h1>
       <p className="text-gray-500 mb-7 3xl:mb-10">
         Add/edit/remove links below and then share all your profiles with the
@@ -53,7 +53,7 @@ const Links = (props: Props) => {
         ))}
         <div ref={bottomLinksRef}></div>
       </div>
-      <div className="mt-5 pt-5 border-t-2 flex justify-end">
+      <div className=" pt-5 border-t-2 flex justify-end mt-auto">
         <CustomButton
           clickHandler={handleSaveLinks}
           text="Save"
