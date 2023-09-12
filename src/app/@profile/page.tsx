@@ -7,7 +7,7 @@ import { useUser } from '@clerk/nextjs';
 import { z } from 'zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 
 type Props = {};
@@ -22,32 +22,61 @@ const ProfileDetailSchema = z.object({
     .string()
     .min(3, 'Last name must contain at least 3 characters!')
     .max(20, 'Last name only contain at most 20 characters!'),
-  imageUrl: z.string(),
 });
 
 type ProfileDetailSchemaType = z.infer<typeof ProfileDetailSchema>;
 
 const Profile = (props: Props) => {
   const { user } = useUser();
+  const [selectedImage, setSelectedImage] = useState<null | File>(null);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const profile = useQuery(api.profile.getProfileByUserId, {
     userId: user!.id,
   });
   const updateProfile = useMutation(api.profile.updateProfile);
+  const savedImageToProfile = useMutation(api.profile.savedImageToProfile);
+  const generateUploadUrl = useMutation(api.profile.generateUploadImageUrl);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-    getValues,
   } = useForm<ProfileDetailSchemaType>({
     resolver: zodResolver(ProfileDetailSchema),
   });
 
-  const onSubmit: SubmitHandler<ProfileDetailSchemaType> = (data) => {
+  const handleOpenSelectImage = () => {
+    if (!fileInputRef || !fileInputRef.current) return;
+    fileInputRef.current.click();
+  };
+
+  const handleOnChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    setSelectedImage(e.target.files[0]);
+  };
+
+  const onSubmit: SubmitHandler<ProfileDetailSchemaType> = async (data) => {
     if (!user || !profile) return;
     updateProfile({ userId: user.id, profileId: profile._id, ...data });
+    if (selectedImage) {
+      const postUrl = await generateUploadUrl();
+
+      const result = await fetch(postUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': selectedImage!.type },
+        body: selectedImage,
+      });
+      const { storageId } = await result.json();
+
+      await savedImageToProfile({
+        storageId,
+        profileId: profile._id,
+        userId: user.id,
+      });
+    }
   };
 
   useEffect(() => {
@@ -55,7 +84,6 @@ const Profile = (props: Props) => {
     setValue('firstName', profile.firstName);
     setValue('lastName', profile.lastName);
     setValue('email', profile.email);
-    setValue('imageUrl', profile.imageUrl ?? '');
   }, [profile]);
 
   return (
@@ -67,17 +95,29 @@ const Profile = (props: Props) => {
 
       <div className="bg-primary p-4 flex items-center justify-between text-gray-500 rounded-lg border">
         <p>Profile picture</p>
-        <div className="flex items-center justify-between w-[500px]">
+        <div className="flex items-center justify-between w-[500px] cursor-pointer hover:opacity-80">
           <Image
             alt=""
-            src={getValues('imageUrl') ?? ''}
+            src={
+              selectedImage
+                ? URL.createObjectURL(selectedImage)
+                : profile?.imageUrl ?? ''
+            }
             width={192}
             height={192}
             className="rounded-lg object-cover"
+            onClick={handleOpenSelectImage}
           />
           <span className="text-xs max-w-[280px]">
             Images must be below 1024x1024px. Use PNG, JPG or BMP format.
           </span>
+          <input
+            ref={fileInputRef}
+            hidden
+            type="file"
+            onChange={handleOnChangeImage}
+            accept="image/*"
+          />
         </div>
       </div>
 

@@ -43,7 +43,6 @@ export const updateProfile = mutation({
     profileId: v.id('profile'),
     firstName: v.string(),
     lastName: v.string(),
-    imageUrl: v.string(),
     email: v.string(),
   },
   handler: async (ctx, args) => {
@@ -69,5 +68,30 @@ export const createProfile = internalMutation({
   },
   handler: async (ctx, args) => {
     await ctx.db.insert('profile', args);
+  },
+});
+
+export const generateUploadImageUrl = mutation(async (ctx) => {
+  return await ctx.storage.generateUploadUrl();
+});
+
+export const savedImageToProfile = mutation({
+  args: {
+    userId: v.string(),
+    profileId: v.id('profile'),
+    storageId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const { profileId, userId, storageId } = args;
+    const existingProfile = await ctx.db.get(profileId);
+
+    if (!existingProfile) throw new Error('Profile not found');
+
+    if (existingProfile.userId !== userId)
+      throw new Error('Not authenticated!');
+
+    await ctx.db.patch(profileId, {
+      imageUrl: (await ctx.storage.getUrl(storageId)) ?? '',
+    });
   },
 });

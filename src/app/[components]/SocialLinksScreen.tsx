@@ -22,14 +22,14 @@ const SocialLinksScreen = (props: Props) => {
       <div className="w-[90%] 3xl:w-[80%] h-full border-2 border-tertiary rounded-2xl overflow-hidden">
         <div className="w-full h-full overflow-auto custom-scrollbar  p-6">
           <div className="flex flex-col items-center gap-2 text-black">
-            <Image
-              alt=""
-              src={profile?.imageUrl ?? ''}
-              width={100}
-              height={100}
-              objectFit="cover"
-              className="rounded-full mx-auto mb-2"
-            />
+            <div className="relative mx-auto mb-2 w-24 h-24 rounded-full overflow-hidden">
+              <Image
+                alt=""
+                src={profile?.imageUrl ?? ''}
+                fill
+                objectFit="cover"
+              />
+            </div>
             <h2 className="text-xl font-semibold">
               {profile?.firstName} {profile?.lastName}
             </h2>

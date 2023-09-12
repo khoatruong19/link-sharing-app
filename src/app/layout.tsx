@@ -1,6 +1,7 @@
 'use client';
 
 import './globals.css';
+import 'cropperjs/dist/cropper.css';
 import { Inter } from 'next/font/google';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
