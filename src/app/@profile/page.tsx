@@ -12,6 +12,7 @@ import Image from 'next/image';
 import { ImageIcon } from 'lucide-react';
 import { POPUP, usePopupContext } from '../[providers]/PopupProvider';
 import { CropImageProps } from '../[components]/CropImage';
+import { resizeImage } from '../[utils]/helpers';
 
 type Props = {};
 
@@ -61,6 +62,9 @@ const Profile = (props: Props) => {
   const handleOnChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const image = e.target.files[0];
+
+    if (!image) return;
+
     setSelectedImage(image);
     setTimeout(() => {
       showPopup<CropImageProps>(POPUP.CROP_IMAGE, {
@@ -84,19 +88,21 @@ const Profile = (props: Props) => {
       image = imageBlob;
     }
 
-    const postUrl = await generateUploadUrl();
+    resizeImage({ image }, async (resultBlob) => {
+      const postUrl = await generateUploadUrl();
 
-    const result = await fetch(postUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': image!.type },
-      body: image,
-    });
-    const { storageId } = await result.json();
+      const result = await fetch(postUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': resultBlob!.type },
+        body: resultBlob,
+      });
+      const { storageId } = await result.json();
 
-    await savedImageToProfile({
-      storageId,
-      profileId: profile._id,
-      userId: user.id,
+      await savedImageToProfile({
+        storageId,
+        profileId: profile._id,
+        userId: user.id,
+      });
     });
   };
 
