@@ -5,6 +5,7 @@ const nextConfig = {
       'avatars.githubusercontent.com',
       'img.clerk.com',
       'gregarious-bird-604.convex.cloud',
+      'cdn.pixabay.com',
     ],
   },
 };

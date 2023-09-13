@@ -9,6 +9,9 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import { ImageIcon } from 'lucide-react';
+import { POPUP, usePopupContext } from '../[providers]/PopupProvider';
+import { CropImageProps } from '../[components]/CropImage';
 
 type Props = {};
 
@@ -29,6 +32,8 @@ type ProfileDetailSchemaType = z.infer<typeof ProfileDetailSchema>;
 const Profile = (props: Props) => {
   const { user } = useUser();
   const [selectedImage, setSelectedImage] = useState<null | File>(null);
+  const [croppedImage, setCroppedImage] = useState<null | string>(null);
+  const { showPopup } = usePopupContext();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -55,28 +60,44 @@ const Profile = (props: Props) => {
 
   const handleOnChangeImage = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
-    setSelectedImage(e.target.files[0]);
+    const image = e.target.files[0];
+    setSelectedImage(image);
+    setTimeout(() => {
+      showPopup<CropImageProps>(POPUP.CROP_IMAGE, {
+        image,
+        setCroppedImage,
+      });
+    }, 200);
   };
 
   const onSubmit: SubmitHandler<ProfileDetailSchemaType> = async (data) => {
     if (!user || !profile) return;
     updateProfile({ userId: user.id, profileId: profile._id, ...data });
-    if (selectedImage) {
-      const postUrl = await generateUploadUrl();
 
-      const result = await fetch(postUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': selectedImage!.type },
-        body: selectedImage,
-      });
-      const { storageId } = await result.json();
+    if (!selectedImage) return;
 
-      await savedImageToProfile({
-        storageId,
-        profileId: profile._id,
-        userId: user.id,
-      });
+    let image: File | Blob = selectedImage;
+
+    if (croppedImage) {
+      const response = await fetch(croppedImage);
+      const imageBlob = await response.blob();
+      image = imageBlob;
     }
+
+    const postUrl = await generateUploadUrl();
+
+    const result = await fetch(postUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': image!.type },
+      body: image,
+    });
+    const { storageId } = await result.json();
+
+    await savedImageToProfile({
+      storageId,
+      profileId: profile._id,
+      userId: user.id,
+    });
   };
 
   useEffect(() => {
@@ -96,18 +117,29 @@ const Profile = (props: Props) => {
       <div className="bg-primary p-4 flex items-center justify-between text-gray-500 rounded-lg border">
         <p>Profile picture</p>
         <div className="flex items-center justify-between w-[500px] cursor-pointer hover:opacity-80">
-          <Image
-            alt=""
-            src={
-              selectedImage
-                ? URL.createObjectURL(selectedImage)
-                : profile?.imageUrl ?? ''
-            }
-            width={192}
-            height={192}
-            className="rounded-lg object-cover"
+          <div
+            className="group w-40 h-40 relative overflow-hidden rounded-lg "
             onClick={handleOpenSelectImage}
-          />
+          >
+            <Image
+              alt=""
+              src={
+                croppedImage
+                  ? croppedImage
+                  : selectedImage
+                  ? URL.createObjectURL(selectedImage)
+                  : profile?.imageUrl ?? ''
+              }
+              fill
+              className="object-cover"
+              placeholder="blur"
+              blurDataURL="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
+            />
+            <div className="absolute top-0 left-0 w-full h-full bg-black/20 hidden group-hover:flex flex-col items-center justify-center gap-2 text-white">
+              <ImageIcon size={40} />
+              <span className="text-lg font-semibold">Change Image</span>
+            </div>
+          </div>
           <span className="text-xs max-w-[280px]">
             Images must be below 1024x1024px. Use PNG, JPG or BMP format.
           </span>

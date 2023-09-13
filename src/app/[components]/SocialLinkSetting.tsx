@@ -6,7 +6,7 @@ import CustomButton from './CustomButton';
 import PlatformsSelect from './PlatformsSelect';
 import { Platform, PlatformItem, SocialLink } from '../[utils]/types';
 import { PLATFORM_OPTIONS } from '../[utils]/constants';
-import SocialLinkValidator from '../[utils]/social-links';
+import SocialLinkValidator from '../[libs]/social-links';
 
 type Props = {
   link: SocialLink;

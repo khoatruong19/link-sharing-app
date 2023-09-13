@@ -1,5 +1,5 @@
 import { SocialLinks, Config } from 'social-links';
-import { Platform } from './types';
+import { Platform } from '../[utils]/types';
 
 class SocialLinkValidator {
   private socialLinksValidator: SocialLinks;

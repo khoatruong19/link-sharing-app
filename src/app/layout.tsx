@@ -9,6 +9,7 @@ import ConvexClientProvider from './[providers]/ConvexClientProvider';
 import HomeNavbar from './[components]/HomeNavbar';
 import SocialLinksScreen from './[components]/SocialLinksScreen';
 import AuthenticationProvider from './[providers]/AuthenticationProvider';
+import PopupProvider from './[providers]/PopupProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -36,23 +37,25 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ConvexClientProvider>
-          {children}
-          {homepageNavItem && (
-            <AuthenticationProvider>
-              <div className="w-screen h-screen p-4 flex flex-col gap-4">
-                <HomeNavbar
-                  navItem={homepageNavItem}
-                  setNavItem={setHomepageNavItem}
-                />
-                <div className="h-full w-full flex gap-5 overflow-hidden">
-                  <SocialLinksScreen />
-                  <div className="flex-1 px-10 pb-5 pt-10 2xl:px-16 bg-white border rounded-md shadow-md">
-                    {homepageNavItem === 'links' ? links : profile}
+          <PopupProvider>
+            {children}
+            {homepageNavItem && (
+              <AuthenticationProvider>
+                <div className="w-screen h-screen p-4 flex flex-col gap-4">
+                  <HomeNavbar
+                    navItem={homepageNavItem}
+                    setNavItem={setHomepageNavItem}
+                  />
+                  <div className="h-full w-full flex gap-5 overflow-hidden">
+                    <SocialLinksScreen />
+                    <div className="flex-1 px-10 pb-5 pt-10 2xl:px-16 bg-white border rounded-md shadow-md">
+                      {homepageNavItem === 'links' ? links : profile}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </AuthenticationProvider>
-          )}
+              </AuthenticationProvider>
+            )}
+          </PopupProvider>
         </ConvexClientProvider>
       </body>
     </html>
