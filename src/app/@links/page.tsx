@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import CustomButton from '../[components]/CustomButton';
 import SocialLinkSetting from '../[components]/SocialLinkSetting';
 import useLinks from '../[hooks]/useLinks';
+import { SocialLink } from '../[utils]/types';
 
 type Props = {};
 
@@ -18,11 +19,24 @@ const Links = (props: Props) => {
   } = useLinks();
 
   const bottomLinksRef = useRef<HTMLDivElement | null>(null);
+  const previousLinksRef = useRef<SocialLink[] | null>(null);
 
   const scrollToNewLink = () => {
     if (!bottomLinksRef || !bottomLinksRef.current) return;
     bottomLinksRef.current.scrollIntoView();
   };
+
+  const isLinksChanged = useMemo(() => {
+    if (!previousLinksRef || !previousLinksRef.current) return false;
+    return JSON.stringify(previousLinksRef.current) !== JSON.stringify(links);
+  }, [previousLinksRef, links]);
+
+  useEffect(() => {
+    if (!previousLinksRef || previousLinksRef.current) return;
+    if (links.length > 0) {
+      previousLinksRef.current = links;
+    }
+  }, [links]);
 
   return (
     <div className="text-black h-full  flex flex-col">
@@ -55,9 +69,12 @@ const Links = (props: Props) => {
       </div>
       <div className=" pt-5 border-t-2 flex justify-end mt-auto">
         <CustomButton
+          disabled={!isLinksChanged}
           clickHandler={handleSaveLinks}
           text="Save"
-          className="bg-secondary font-semibold text-white rounded-md px-6 hover:bg-tertiary"
+          className={`font-semibold text-white rounded-md px-6 ${
+            isLinksChanged ? 'bg-tertiary' : 'bg-secondary '
+          }`}
         />
       </div>
     </div>
