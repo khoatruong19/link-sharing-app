@@ -41,12 +41,7 @@ const SocialLinkSetting = ({
       linkUrl
     );
 
-    if (!isValid) {
-      setErrorValidation(true);
-      return;
-    }
-
-    setErrorValidation(false);
+    setErrorValidation(!isValid);
 
     updateLink(order, {
       url: linkUrl,

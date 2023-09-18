@@ -13,6 +13,8 @@ import { ImageIcon } from 'lucide-react';
 import { POPUP, usePopupContext } from '../[providers]/PopupProvider';
 import { CropImageProps } from '../[components]/CropImage';
 import { resizeImage } from '../[utils]/helpers';
+import { toast } from 'react-toastify';
+import { TOASTIFY_MESSAGES } from '../[utils]/constants';
 
 const ProfileDetailSchema = z.object({
   email: z.string().trim().email(),
@@ -98,6 +100,7 @@ const Profile = () => {
 
     if (!selectedImage) {
       setUpdateLoading(false);
+      toast.success(TOASTIFY_MESSAGES.updateProfileSuccess);
       return;
     }
 
@@ -125,7 +128,9 @@ const Profile = () => {
         userId: user.id,
       });
 
+      toast.success(TOASTIFY_MESSAGES.updateProfileSuccess);
       setUpdateLoading(false);
+      setSelectedImage(null);
     });
   };
 

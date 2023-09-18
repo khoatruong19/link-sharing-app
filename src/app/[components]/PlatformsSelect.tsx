@@ -22,7 +22,10 @@ const PlatformsSelect = ({
   platformsSelected,
   onSelect,
 }: Props) => {
-  const [openSelect, setOpenSelect] = useState({
+  const [openSelect, setOpenSelect] = useState<{
+    active: boolean;
+    position: 'top' | 'bottom';
+  }>({
     active: false,
     position: 'bottom',
   });
@@ -44,7 +47,7 @@ const PlatformsSelect = ({
     const coordinateY = selectTriggerRef.current.getBoundingClientRect().y;
 
     const thesholdCoordinateY = window.screen.height * 0.8;
-    let position = 'bottom';
+    let position: 'top' | 'bottom' = 'bottom';
 
     if (coordinateY + SELECT_OPTIONS_HEIGHT > thesholdCoordinateY)
       position = 'top';

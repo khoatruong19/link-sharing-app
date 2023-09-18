@@ -1,5 +1,5 @@
 import { Platform, SocialLink } from '../[utils]/types';
-import { PLATFORM_OPTIONS } from '../[utils]/constants';
+import { PLATFORM_OPTIONS, TOASTIFY_MESSAGES } from '../[utils]/constants';
 import { useAction } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { useUser } from '@clerk/nextjs';
@@ -7,6 +7,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'convex/react';
 import { getColorByPlatform } from '../[utils]/helpers';
 import { Id } from '../../../convex/_generated/dataModel';
+import SocialLinkValidator from '../[libs]/social-links';
+import { toast } from 'react-toastify';
 
 type FormatedNewLink = {
   platform: string;
@@ -83,11 +85,16 @@ const useLinks = () => {
 
     let hasErrorLink = false;
 
-    links.forEach((link) => {
-      if (!link.url) {
+    const socialLinksValidator = new SocialLinkValidator();
+
+    for (const link of links) {
+      const isValid = socialLinksValidator.checkValidLink(link.label, link.url);
+
+      if (!link.url || !isValid) {
         hasErrorLink = true;
-        return;
+        break;
       }
+
       const formatedLink: FormatedNewLink = {
         platform: link.label,
         url: link.url,
@@ -95,9 +102,10 @@ const useLinks = () => {
       if (link._id) {
         formatedUpdateLinks.push({ ...formatedLink, _id: link._id });
       } else formatedNewLinks.push(formatedLink);
-    });
+    }
 
-    if (hasErrorLink) return alert('Wrong links existing!');
+    if (hasErrorLink)
+      return toast.error(TOASTIFY_MESSAGES.inapproriateLinksError);
 
     saveLinks({
       userId: user.id,
@@ -106,6 +114,7 @@ const useLinks = () => {
       updateLinks: formatedUpdateLinks,
     });
 
+    toast.success(TOASTIFY_MESSAGES.updateLinksSuccess);
     setDeleteLinksId([]);
   };
 

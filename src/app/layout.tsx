@@ -1,6 +1,7 @@
 'use client';
 
 import './globals.css';
+import 'react-toastify/dist/ReactToastify.css';
 import 'cropperjs/dist/cropper.css';
 import { Inter } from 'next/font/google';
 import { usePathname } from 'next/navigation';
@@ -10,6 +11,7 @@ import HomeNavbar from './[components]/HomeNavbar';
 import SocialLinksScreen from './[components]/SocialLinksScreen';
 import AuthenticationProvider from './[providers]/AuthenticationProvider';
 import PopupProvider from './[providers]/PopupProvider';
+import { ToastContainer } from 'react-toastify';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -57,6 +59,7 @@ export default function RootLayout({
             )}
           </PopupProvider>
         </ConvexClientProvider>
+        <ToastContainer />
       </body>
     </html>
   );

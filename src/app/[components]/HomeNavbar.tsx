@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import CustomButton from './CustomButton';
 import HomeNavLinks from './HomeNavLinks';
 import Logo from './Logo';
+import { useUser } from '@clerk/nextjs';
 
 type Props = {
   navItem: string | null;
@@ -13,9 +14,10 @@ type Props = {
 
 const HomeNavbar = ({ navItem, setNavItem }: Props) => {
   const router = useRouter();
+  const { user } = useUser();
 
   const navigateToPreviewPage = () => {
-    router.push('/preview/asdkhsd');
+    router.push(`/preview/${user?.id ?? ''}`);
   };
 
   return (

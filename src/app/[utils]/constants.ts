@@ -54,3 +54,9 @@ export const PLATFORM_OPTIONS: PlatformItem[] = [
     color: '#010101',
   },
 ];
+
+export const TOASTIFY_MESSAGES = {
+  updateProfileSuccess: 'Profile updated successfully!',
+  updateLinksSuccess: 'Links updated successfully!',
+  inapproriateLinksError: 'Some links are inapproriate. Update fail!',
+};
